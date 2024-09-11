@@ -16,8 +16,8 @@ Follow these instructions to get a local instance of Medusa up and running using
 ### 1. Clone the Repository
 
 ```sh
-git clone <your-repository-url>
-cd <repository-directory>
+git clone https://github.com/MohitKharayat/my-medusa-store.git
+cd my-medusa-store
 ```
 
 ### 2. Build the Docker Images
