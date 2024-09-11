@@ -1,70 +1,95 @@
-<p align="center">
-  <a href="https://www.medusajs.com">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/59018053/229103275-b5e482bb-4601-46e6-8142-244f531cebdb.svg">
-    <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/59018053/229103726-e5b529a3-9b3f-4970-8a1f-c6af37f087bf.svg">
-    <img alt="Medusa logo" src="https://user-images.githubusercontent.com/59018053/229103726-e5b529a3-9b3f-4970-8a1f-c6af37f087bf.svg">
-    </picture>
-  </a>
-</p>
-<h1 align="center">
-  Medusa
-</h1>
+# Medusa Docker Setup
 
-<h4 align="center">
-  <a href="https://docs.medusajs.com">Documentation</a> |
-  <a href="https://www.medusajs.com">Website</a>
-</h4>
+## Overview
 
-<p align="center">
-  Building blocks for digital commerce
-</p>
-<p align="center">
-  <a href="https://github.com/medusajs/medusa/blob/master/CONTRIBUTING.md">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat" alt="PRs welcome!" />
-  </a>
-    <a href="https://www.producthunt.com/posts/medusa"><img src="https://img.shields.io/badge/Product%20Hunt-%231%20Product%20of%20the%20Day-%23DA552E" alt="Product Hunt"></a>
-  <a href="https://discord.gg/xpCwq3Kfn8">
-    <img src="https://img.shields.io/badge/chat-on%20discord-7289DA.svg" alt="Discord Chat" />
-  </a>
-  <a href="https://twitter.com/intent/follow?screen_name=medusajs">
-    <img src="https://img.shields.io/twitter/follow/medusajs.svg?label=Follow%20@medusajs" alt="Follow @medusajs" />
-  </a>
-</p>
+This repository contains a Docker setup for running the Medusa headless commerce platform locally. It uses Docker and Docker Compose to containerize the Medusa application and PostgreSQL database.
 
-## Compatibility
+## Prerequisites
 
-This starter is compatible with versions >= 1.8.0 of `@medusajs/medusa`. 
+- **Docker**: Make sure Docker is installed on your local machine.
+- **Docker Compose**: Make sure Docker Compose is installed on your local machine.
 
 ## Getting Started
 
-Visit the [Quickstart Guide](https://docs.medusajs.com/create-medusa-app) to set up a server.
+Follow these instructions to get a local instance of Medusa up and running using Docker.
 
-Visit the [Docs](https://docs.medusajs.com/development/backend/prepare-environment) to learn more about our system requirements.
+### 1. Clone the Repository
 
-## What is Medusa
+```sh
+git clone <your-repository-url>
+cd <repository-directory>
+```
 
-Medusa is a set of commerce modules and tools that allow you to build rich, reliable, and performant commerce applications without reinventing core commerce logic. The modules can be customized and used to build advanced ecommerce stores, marketplaces, or any product that needs foundational commerce primitives. All modules are open-source and freely available on npm.
+### 2. Build the Docker Images
 
-Learn more about [Medusa’s architecture](https://docs.medusajs.com/development/fundamentals/architecture-overview) and [commerce modules](https://docs.medusajs.com/modules/overview) in the Docs.
+Run the following command to build the Docker images defined in the Dockerfile and Docker Compose configuration:
 
-## Roadmap, Upgrades & Plugins
+```sh
+docker-compose build
+```
 
-You can view the planned, started and completed features in the [Roadmap discussion](https://github.com/medusajs/medusa/discussions/categories/roadmap).
+### 3. Start the Containers
 
-Follow the [Upgrade Guides](https://docs.medusajs.com/upgrade-guides/) to keep your Medusa project up-to-date.
+Use the following command to start the Medusa and PostgreSQL containers:
 
-Check out all [available Medusa plugins](https://medusajs.com/plugins/).
+```sh
+docker-compose up
+```
 
-## Community & Contributions
+This will start both Medusa and PostgreSQL services. Medusa will be available on port 9000 and PostgreSQL will be available on port 5432.
 
-The community and core team are available in [GitHub Discussions](https://github.com/medusajs/medusa/discussions), where you can ask for support, discuss roadmap, and share ideas.
+### 4. Access the Application
 
-Join our [Discord server](https://discord.com/invite/medusajs) to meet other community members.
+ [http://localhost:7001](http://localhost:7001)
 
-## Other channels
+### 5. Stop the Containers
 
-- [GitHub Issues](https://github.com/medusajs/medusa/issues)
-- [Twitter](https://twitter.com/medusajs)
-- [LinkedIn](https://www.linkedin.com/company/medusajs)
-- [Medusa Blog](https://medusajs.com/blog/)
+To stop and remove the containers, use:
+
+```sh
+docker-compose down
+```
+
+## Configuration
+
+### Environment Variables
+
+The `docker-compose.yml` file sets up the following environment variables for the Medusa service:
+
+- `JWT_SECRET`: Secret key for JSON Web Tokens.
+- `COOKIE_SECRET`: Secret key for cookies.
+- `DATABASE_TYPE`: Type of database being used (PostgreSQL).
+- `DATABASE_URL`: URL for connecting to the PostgreSQL database.
+
+### Ports
+
+- **Medusa Backend**: Port 7001
+- **PostgreSQL Database**: Port 5432
+
+### Dockerfile
+
+The `Dockerfile` used to build the Medusa application container includes:
+
+- Base image: `node:18`
+- Working directory set to `/usr/src/app`
+- Copies `package.json` and `package-lock.json` for dependency installation
+- Copies application code
+- Exposes ports 9000 and 7001
+- Starts Medusa with `npx medusa develop`
+
+### Docker Compose
+
+The `docker-compose.yml` file defines two services:
+
+- **medusa**: Builds from the Dockerfile, sets environment variables, maps ports, and depends on the PostgreSQL service.
+- **postgres**: Uses the official PostgreSQL image, sets up environment variables for PostgreSQL, and maps port 5432.
+
+## Troubleshooting
+
+- **Address Already in Use**: Ensure no other services are using the same ports. You may need to stop conflicting services or adjust port mappings in `docker-compose.yml`.
+- **Connection Issues**: Verify that both Medusa and PostgreSQL containers are running correctly. Check Docker logs for more details.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
