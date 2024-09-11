@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  medusa:
+    build: .
+    container_name: medusa
+    environment:
+      - JWT_SECRET=key
+      - COOKIE_SECRET=key
+      - DATABASE_TYPE=postgres
+      - DATABASE_URL=postgres://postgres:12345@postgres:5432/postgres
+    ports:
+      - "9000:9000"
+      - "7001:7001"
+    depends_on:
+      - postgres
+    networks:
+      - medusa-network
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - medusa-network
+
+networks:
+  medusa-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
